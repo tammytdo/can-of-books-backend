@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_Url);
+mongoose.connect(process.env.MONGODB_URL);
 
 const Book = require('./models/bookModel.js');
 

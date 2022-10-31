@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3002;
 const mongoose = require('mongoose');
 const BookModel = require('./models/bookModel.js')
 
-mongoose.connect(process.env.MONGODB_Url);
+mongoose.connect(process.env.MONGODB_URL);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', _ => {
@@ -20,6 +20,7 @@ db.once('open', _ => {
 })
 
 
+app.get('/books', getBooks);
 
 app.get('/', (request, response) =>{
   response.status(200).send('Greetings from server');
@@ -34,11 +35,14 @@ async function getBooks(request, response, next){
   }
 }
 
-app.get('/books', getBooks);
 
 app.get('*', (request, response) => {
   response.status(404).send("Wildcard route")
 });
+
+app.use((error, request, response, next) => {
+  response.status(500).send(error.message);
+})
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
