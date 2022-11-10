@@ -10,9 +10,9 @@ app.use(cors());
 const PORT = process.env.PORT || 3002;
 
 const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URL);
 const BookModel = require('./models/bookModel.js')
 
-mongoose.connect(process.env.MONGODB_URL);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', _ => {
@@ -35,6 +35,13 @@ async function getBooks(request, response, next){
   }
 }
 
+
+app.delete('/books/:id', async (req, res) => {
+
+  await BookModel.findByIdAndDelete(req.params.id);
+
+  res.send('success!');
+});
 
 app.get('*', (request, response) => {
   response.status(404).send("Wildcard route")
